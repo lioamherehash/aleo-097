@@ -25,7 +25,7 @@ program auction.aleo {
         assert_eq(self.caller, bidder);
         // Return a new 'Bid' record for the auction bidder.
         return Bid {
-            owner: aleo1fxs9s0w97lmkwlcmgn0z3nuxufdee5yck9wqrs0umevp7qs0sg9q5xxxzh,
+            owner: aleo1lur03kl9w5nvhk6hgfgnlv03a8hrtkt4j66ua04k2fzgsdnszv8qvncmwt,
             bidder: bidder,
             amount: amount,
             is_winner: false,
@@ -40,7 +40,7 @@ program auction.aleo {
     // In the event of a tie, the first bid is selected.
     transition resolve(first: Bid, second: Bid) -> Bid {
         // Ensure the caller is the auctioneer.
-        assert_eq(self.caller, aleo1fxs9s0w97lmkwlcmgn0z3nuxufdee5yck9wqrs0umevp7qs0sg9q5xxxzh);
+        assert_eq(self.caller, aleo1lur03kl9w5nvhk6hgfgnlv03a8hrtkt4j66ua04k2fzgsdnszv8qvncmwt);
         // Resolve the winner of the auction.
         if (first.amount >= second.amount) {
             return first;
@@ -55,7 +55,7 @@ program auction.aleo {
     // Assumes that the function is invoked only after all bids have been resolved.
     transition finish(bid: Bid) -> Bid {
         // Ensure the caller is the auctioneer.
-        assert_eq(self.caller, aleo1fxs9s0w97lmkwlcmgn0z3nuxufdee5yck9wqrs0umevp7qs0sg9q5xxxzh);
+        assert_eq(self.caller, aleo1lur03kl9w5nvhk6hgfgnlv03a8hrtkt4j66ua04k2fzgsdnszv8qvncmwt);
         // Return 'is_winner' as 'true' in the winning 'Bid'.
         return Bid {
             owner: bid.bidder,

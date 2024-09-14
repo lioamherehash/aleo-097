@@ -1,154 +1,159 @@
-<!-- <h1 align="center">Aleo Workshop</h1> -->
-<img alt="workshop" width="1412" src="./.resources/readme.png">
-<h3 align="center">📜 A starter guide to build applications on Aleo 📜</h3>
-
-<p align="center">
-    <a href="https://twitter.com/AleoHQ"><img src="https://img.shields.io/twitter/url/https/twitter.com/AleoHQ.svg?style=social&label=Follow%20%40AleoHQ"></a>
-    <a href="https://aleo.org/discord"><img src="https://img.shields.io/discord/700454073459015690?logo=discord"/></a>
-</p>
-
-## Table of Contents
-- [Build Guide](#build-guide)
-    - [Prerequisites](#prerequisites)
-    - [Installation](#installation)
-- [IDE Support](#ide-support)
-    - [VSCode](#vscode-preferred)
-    - [Sublime Text](#sublime-text)
-    - [IntelliJ IDEA](#intellij-idea)
-- [Application Walkthroughs](#application-walkthroughs)
-    - [🏛️ Auction](#-auction) ([Source Code](./auction/))
-    - [🏦 Basic Bank](#-basic-bank) ([Source Code](./basic_bank/))
-    - [🛳️ Battleship](#-battleship) ([Source Code](./battleship/))
-    - [⭕ Tic-Tic-Toe](#-tic-tac-toe) ([Source Code](./tictactoe/))
-    - [🪙 Token](#-token) ([Source Code](./token))
-    - [🗳️ Vote](#-vote) ([Source Code](./vote/))
-
-## Build Guide
-
-The following steps will install Aleo and Leo on your machine. This workshop is compatible on macOS, Linux, and Windows machines.
-
-### Prerequisites
-
-This workshop requires the following prerequisites.
-
-- Install `git` with [bit.ly/start-git](https://bit.ly/start-git)
-- Install `Rust`with [bit.ly/start-rust](https://bit.ly/start-rust)
-
-### Installation
-
-To install Aleo and Leo, run:
-```
-./install.sh
-```
-
-## IDE Support
-
-This workshop requires one of the following IDEs.
-- [VSCode](https://bit.ly/start-vscode)
-- [Sublime Text](https://bit.ly/start-sublime)
-- [IntelliJ IDEA](https://bit.ly/start-intellij)
-
-### VSCode (Preferred)
-
-Start by installing `VSCode` with [bit.ly/start-vscode](https://bit.ly/start-vscode).
-
-#### Next, in VSCode, open the **VSCode Marketplace**, type **Leo** into the search bar, and proceed to install the Leo plugin.
-![Leo VSCode](./.resources/leo-vscode.png)
-
-### Sublime Text
-
-<details><summary>Installation Steps</summary>
-
-Start by installing `Sublime Text` with [bit.ly/start-sublime](https://bit.ly/start-sublime).
-
-#### Next, in Sublime Text, install [Package Control](https://packagecontrol.io):
-- On Windows/Linux: `ctrl + shift + p`, type **Install Package Control**, and press **Enter**.
-- On macOS: `cmd + shift + p`, type **Install Package Control**, and press **Enter**.
-
-#### Next, in Sublime Text, install [LSP](https://packagecontrol.io/packages/LSP):
-- On Windows/Linux: `ctrl + shift + p`, select **Package Control: Install Package**, type **LSP**, and press **Enter**.
-- On macOS: `cmd + shift + p`, select **Package Control: Install Package**, type **LSP**, and press **Enter**.
-
-#### Lastly, in Sublime Text, install [LSP-leo](https://packagecontrol.io/packages/LSP-leo):
-- On Windows/Linux: `ctrl + shift + p`, select **Package Control: Install Package**, type **LSP-leo**, and press **Enter**.
-- On macOS: `cmd + shift + p`, select **Package Control: Install Package**, type **LSP-leo**, and press **Enter**.
-
-</details>
-
-### IntelliJ IDEA
-
-<details><summary>Installation Steps</summary>
-
-Start by installing `IntelliJ IDEA` with [bit.ly/start-intellij](https://bit.ly/start-intellij).
-
-#### Next, in IntelliJ IDEA, open the **IntelliJ Marketplace** and select `Plugins`:
-- On Windows/Linux: `ctrl + ,` and select `Plugins` on the left hand bar
-- On macOS: `cmd + ,` and select `Plugins` on the left hand bar
-
-Lastly, type **Leo** into the search bar, and install the official Leo plugin.
-
-</details>
-
-## Application Walkthroughs
-
-This workshop walks through the following applications:
-- [auction](./auction/) - A first-price sealed-bid auction in Leo
-- [basic_bank](./basic_bank/) - A simple-interest yielding bank account in Leo
-- [battleship](./battleship/)- A two-player game of Battleship in Leo
-- [tictactoe](./tictactoe/) - A standard game of Tic-Tac-Toe in Leo
-- [token](./token) - A transparent & shielded custom token in Leo
-- [vote](./vote/) - A ballot voting example in Leo
-
-### 🏛️ Auction
+<!-- # 🏛️ Blind Auction -->
+<img alt="workshop/auction" width="1412" src="../.resources/auction.png">
 
 A first-price sealed-bid auction in Leo.
 
-To see the auction example, run:
+## Summary
+
+A first-price sealed-bid auction (or blind auction) is a type of auction in which each participant submits a bid without knowing the bids of the other participants.
+The bidder with the highest bid wins the auction.
+
+In this model, there are two parties: the auctioneer and the bidders.
+- **Bidder**: A participant in the auction.
+- **Auctioneer**: The party responsible for conducting the auction.
+
+We make following assumptions about the auction:
+- The auctioneer is honest. That is, the auctioneer will resolve **all** bids in the order they are received. The auctioneer will not tamper with the bids.
+- There is no limit to the number of bids.
+- The auctioneer knows the identity of all bidders, but bidders do not necessarily know the identity of other bidders.
+
+Under this model, we require that:
+- Bidders do not learn any information about the value of other bids.
+
+## Auction Flow
+
+The auction is conducted in a series of stages.
+- **Bidding**: In the bidding stage, bidders submit bids to the auctioneer. They do so by invoking the `place_bid` function.
+- **Resolution**:  In the resolution stage, the auctioneer resolves the bids in the order they were received. The auctioneer does so by invoking the `resolve` function. The resolution process produces a single winning bid.
+- **Finishing**: In this stage, the auctioneer finishes the auction by invoking the `finish` function. This function returns the winning bid to the bidder, which the bidder can then use to claim the item.
+
+## Language Features and Concepts
+- `record` declarations
+- `assert_eq`
+- record ownership
+
+## How to Run
+
+Follow the [Leo Installation Instructions](https://developer.aleo.org/leo/installation).
+
+This auction program can be run using the following bash script. Locally, it will execute Leo program functions to conduct, bid, and close a three party auction.
+
+```bash
+cd auction
+./run.sh
 ```
-cd auction && ./run.sh
+
+The `.env` file contains a private key and address. This is the account that will be used to sign transactions and is checked for record ownership. When executing programs as different parties, be sure to set the `private_key` field in `.env` to the appropriate value. You can check out how we've set things up in `./run.sh` for a full example of how to run the program as different parties.
+
+## Walkthrough
+
+* [Step 0: Initializing the Auction](#step0)
+* [Step 1: The First Bid](#step1)
+* [Step 2: The Second Bid](#step2)
+* [Step 3: Select the Winner](#step3)
+
+## <a id="step0"></a> Step 0: Initializing the Auction
+
+The three parties we'll be emulating are as follows:
+
+```markdown
+First Bidder Private Key:  
+APrivateKey1zkpG9Af9z5Ha4ejVyMCqVFXRKknSm8L1ELEwcc4htk9YhVK
+First Bidder Address: 
+aleo1yzlta2q5h8t0fqe0v6dyh9mtv4aggd53fgzr068jvplqhvqsnvzq7pj2ke
+
+Second Bidder Private Key:
+APrivateKey1zkpAFshdsj2EqQzXh5zHceDapFWVCwR6wMCJFfkLYRKupug
+Second Bidder Address:
+aleo1esqchvevwn7n5p84e735w4dtwt2hdtu4dpguwgwy94tsxm2p7qpqmlrta4
+
+Auctioneer Private Key:
+APrivateKey1zkp5wvamYgK3WCAdpBQxZqQX8XnuN2u11Y6QprZTriVwZVc
+Auctioneer Address:
+aleo1fxs9s0w97lmkwlcmgn0z3nuxufdee5yck9wqrs0umevp7qs0sg9q5xxxzh
 ```
 
-### 🏦 Basic Bank
+## <a id="step1"></a> Step 1: The First Bid
 
-A simple-interest yielding bank account in Leo.
+Have the first bidder place a bid of 10. 
 
-To see the basic bank example, run:
-```
-cd basic_bank && ./run.sh
-```
+Swap in the private key and address of the first bidder to `.env`.
 
-### 🛳️ Battleship
-
-A two-player game of Battleship in Leo.
-
-To see a game of Battleship between two players, run:
-```
-cd battleship && ./run.sh
+```bash
+echo "
+NETWORK=testnet3
+PRIVATE_KEY=APrivateKey1zkpG9Af9z5Ha4ejVyMCqVFXRKknSm8L1ELEwcc4htk9YhVK
+" > .env
 ```
 
-### ⭕ Tic-Tac-Toe
+Call the `place_bid` program function with the first bidder and `10u64` arguments.
 
-A standard game of Tic-Tac-Toe in Leo.
-
-To see a game of Tic-Tac-Toe between two players, run:
-```
-cd tictactoe && ./run.sh
+```bash
+leo run place_bid aleo1yzlta2q5h8t0fqe0v6dyh9mtv4aggd53fgzr068jvplqhvqsnvzq7pj2ke 10u64
 ```
 
-### 🪙 Token
+## <a id="step2"></a> Step 2: The Second Bid
 
-A transparent & shielded custom token in Leo.
+Have the second bidder place a bid of 90.
 
-To see an example of minting and transfering tokens, run:
+Swap in the private key of the second bidder to `.env`.
+
+```bash
+echo "
+NETWORK=testnet3
+PRIVATE_KEY=APrivateKey1zkpAFshdsj2EqQzXh5zHceDapFWVCwR6wMCJFfkLYRKupug
+" > .env
 ```
-cd token && ./run.sh
+
+Call the `place_bid` program function with the second bidder and `90u64` arguments.
+
+```bash
+leo run place_bid aleo1esqchvevwn7n5p84e735w4dtwt2hdtu4dpguwgwy94tsxm2p7qpqmlrta4 90u64
 ```
 
-### 🗳️ Vote
+## <a id="step3"></a> Step 3: Select the Winner
 
-A ballot voting example in Leo.
+Have the auctioneer select the winning bid.
 
-To see an example of a ballot, run:
+Swap in the private key of the auctioneer to `.env`.
+
+```bash
+echo "
+NETWORK=testnet3
+PRIVATE_KEY=APrivateKey1zkp5wvamYgK3WCAdpBQxZqQX8XnuN2u11Y6QprZTriVwZVc
+" > .env
 ```
-cd vote && ./run.sh
+
+Provide the two `Bid` records as input to the `resolve` transition function.
+
+```bash 
+leo run resolve "{
+    owner: aleo1fxs9s0w97lmkwlcmgn0z3nuxufdee5yck9wqrs0umevp7qs0sg9q5xxxzh.private,
+    bidder: aleo1yzlta2q5h8t0fqe0v6dyh9mtv4aggd53fgzr068jvplqhvqsnvzq7pj2ke.private,
+    amount: 10u64.private,
+    is_winner: false.private,
+    _nonce: 4668394794828730542675887906815309351994017139223602571716627453741502624516group.public
+}" "{
+    owner: aleo1fxs9s0w97lmkwlcmgn0z3nuxufdee5yck9wqrs0umevp7qs0sg9q5xxxzh.private,
+    bidder: aleo1esqchvevwn7n5p84e735w4dtwt2hdtu4dpguwgwy94tsxm2p7qpqmlrta4.private,
+    amount: 90u64.private,
+    is_winner: false.private,
+    _nonce: 5952811863753971450641238938606857357746712138665944763541786901326522216736group.public
+}"
 ```
+
+## <a id="step4"></a> Step 4: Finish the Auction
+
+Call the `finish` transition function with the winning `Bid` record.
+
+```bash 
+leo run finish "{
+    owner: aleo1fxs9s0w97lmkwlcmgn0z3nuxufdee5yck9wqrs0umevp7qs0sg9q5xxxzh.private,
+    bidder: aleo1esqchvevwn7n5p84e735w4dtwt2hdtu4dpguwgwy94tsxm2p7qpqmlrta4.private,
+    amount: 90u64.private,
+    is_winner: false.private,
+    _nonce: 5952811863753971450641238938606857357746712138665944763541786901326522216736group.public
+}"
+```
+
+Congratulations! You've run a private auction. We recommend going to [aleo.tools](https://aleo.tools) to generate new accounts and trying the same commands with those addresses.
